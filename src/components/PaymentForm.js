@@ -1,8 +1,8 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import axios from "axios";
 import CurrencyInput from "react-currency-input-field";
-import db from '../firebase'
+import db from "../firebase";
 import { collection, onSnapshot } from "@firebase/firestore";
 
 let donationValue = 0;
@@ -28,16 +28,17 @@ const CARD_OPTIONS = {
 };
 
 function PaymentForm() {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState([]);
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState({});
-  const [charity, setCharity] = useState('')
+  const [charity, setCharity] = useState("");
   const stripe = useStripe();
   const elements = useElements();
-  
+
   useEffect(
-    () => onSnapshot(collection(db, 'Givr'),(snapshot) => 
-        setUsers(snapshot.docs.map(doc => ({...doc.data(), id: doc.id})))
+    () =>
+      onSnapshot(collection(db, "Givr"), (snapshot) =>
+        setUsers(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
       ),
     []
   );
@@ -53,7 +54,7 @@ function PaymentForm() {
   };
 
   const handleSubmit = async (e) => {
-    console.log(users)
+    console.log(users);
     e.preventDefault();
     console.log(charity);
     const { error, paymentMethod } = await stripe.createPaymentMethod({
@@ -64,11 +65,14 @@ function PaymentForm() {
     if (!error) {
       try {
         const { id } = paymentMethod;
-        const response = await axios.post("http://localhost:4000/donate", {
-          amount: parseFloat(donationValue) * 100,
-          describe: "Please donate this to " + charity,
-          id: id,
-        });
+        const response = await axios.post(
+          "https://givr-server.herokuapp.com/donate",
+          {
+            amount: parseFloat(donationValue) * 100,
+            describe: "Please donate this to " + charity,
+            id: id,
+          }
+        );
 
         if (response.data.success) {
           console.log("Successful Payment");
@@ -76,11 +80,11 @@ function PaymentForm() {
         }
       } catch (error) {
         console.log(error);
-        setErrorMessage(error)
+        setErrorMessage(error);
       }
     } else {
       console.log(error);
-      setErrorMessage(error) 
+      setErrorMessage(error);
     }
   };
 
@@ -89,7 +93,12 @@ function PaymentForm() {
       <div className="wrapper">
         <div className="form-wrapper">
           <div className="img-wrapper">
-          <img src={require('../images/givr_reversed.jpeg').default} alt="Givr" width="200" height="200"></img>
+            <img
+              src={require("../images/givr_reversed.jpeg").default}
+              alt="Givr"
+              width="200"
+              height="200"
+            ></img>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="firstName">
@@ -125,7 +134,7 @@ function PaymentForm() {
                 type="text"
                 placeholder="Charity"
                 name="charity"
-                onChange={event => setCharity(event.target.value)}
+                onChange={(event) => setCharity(event.target.value)}
                 required
               ></input>
             </div>
@@ -146,17 +155,16 @@ function PaymentForm() {
             <div className="donate">
               <button>Donate</button>
             </div>
-            <div className='status-messages'>
-            {success ? (
-              <div className="donate-success-message">
-                <p>Payment was successful</p>
-              </div>
-            ) : (
-              <div className="donate-error-message">
-               <p>{errorMessage.message}</p>
-              </div>
-              
-            )}
+            <div className="status-messages">
+              {success ? (
+                <div className="donate-success-message">
+                  <p>Payment was successful</p>
+                </div>
+              ) : (
+                <div className="donate-error-message">
+                  <p>{errorMessage.message}</p>
+                </div>
+              )}
             </div>
           </form>
         </div>
