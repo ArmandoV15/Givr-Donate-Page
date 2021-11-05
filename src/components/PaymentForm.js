@@ -6,6 +6,7 @@ import db from "../firebase";
 import { collection, onSnapshot } from "@firebase/firestore";
 import PulseLoader from "react-spinners/ClipLoader";
 import SuccessPage from "./SuccessPage";
+import { updateDoc, doc } from "firebase/firestore";
 
 let donationValue = 0;
 
@@ -29,19 +30,9 @@ const CARD_OPTIONS = {
   },
 };
 
-function validateEmail(users, email) {
-  for (var user in users) {
-    var Givr = users[user];
-    // TODO: Fix this by adding email to firestore!
-    if (email === Givr.name) {
-      return true;
-    }
-  }
-  return false;
-}
-
 function PaymentForm() {
   const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState("");
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState({});
   const [paymentStart, setPaymentStart] = useState(false);
@@ -51,6 +42,7 @@ function PaymentForm() {
 
   const params = new URLSearchParams(window.location.search);
   const formCharity = params.get("charity");
+  const category = params.get("category");
 
   useEffect(
     () =>
@@ -72,12 +64,43 @@ function PaymentForm() {
 
   const handleChange = (e) => {
     setEmail(e.target.value);
-    console.log(email);
   };
+
+  function validateEmail(users, email) {
+    for (var user in users) {
+      var Givr = users[user];
+      // TODO: Fix this by adding email to firestore!
+      if (email.toLowerCase() === Givr.email.toLowerCase()) {
+        setCurrentUser(Givr.id);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function addDonationToUserAccount(users, email) {
+    for (var user in users) {
+      var Givr = users[user];
+      // TODO: Fix this by adding email to firestore!
+      if (email.toLowerCase() === Givr.email.toLowerCase()) {
+        var currentDonations = Givr.donationHistory;
+        var newDonation = {
+          amount: parseInt(donationValue),
+          category: "Health",
+          datetime: new Date(),
+          name: formCharity,
+        };
+        currentDonations.push(newDonation);
+        const currentUser = doc(db, "Givr", Givr.id);
+        updateDoc(currentUser, {
+          donationHistory: currentDonations,
+        });
+      }
+    }
+  }
 
   const handleSubmit = async (e) => {
     setPaymentStart(true);
-    console.log(users);
     e.preventDefault();
     if (validateEmail(users, email)) {
       const { error, paymentMethod } = await stripe.createPaymentMethod({
@@ -98,17 +121,15 @@ function PaymentForm() {
           );
 
           if (response.data.success) {
-            console.log("Successful Payment");
+            addDonationToUserAccount(users, email);
             setSuccess(true);
             setPaymentStart(false);
           }
         } catch (error) {
-          console.log(error);
           setErrorMessage(error);
           setPaymentStart(false);
         }
       } else {
-        console.log(error);
         setErrorMessage(error);
         setPaymentStart(false);
       }
