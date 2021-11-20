@@ -150,3 +150,15 @@ input.error {
 .spinner-wrapper {
   margin-top: 10px;
 }
+
+.bg-image {
+  background-image: url("./images/image0.png");
+  background-color: #009988;
+  position: fixed;
+  min-height: 100%;
+  min-width: 100%;
+  background-size: cover;
+  background-position: center;
+  object-fit: cover;
+  flex: 1;
+}

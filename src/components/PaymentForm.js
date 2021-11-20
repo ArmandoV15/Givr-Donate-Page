@@ -37,13 +37,15 @@ function PaymentForm() {
   const [errorMessage, setErrorMessage] = useState({});
   const [paymentStart, setPaymentStart] = useState(false);
   const [email, setEmail] = useState("");
+  const [currentEmailError, setCurrentEmailError] = useState("");
   const stripe = useStripe();
   const elements = useElements();
 
   const params = new URLSearchParams(window.location.search);
-  const formCharity = params.get("charity");
-  const category = params.get("category");
+  const formCharity = params.get("Charity");
+  const category = params.get("Category");
 
+  console.log(category);
   useEffect(
     () =>
       onSnapshot(collection(db, "Givr"), (snapshot) =>
@@ -64,6 +66,13 @@ function PaymentForm() {
 
   const handleChange = (e) => {
     setEmail(e.target.value);
+    if (validateEmail(users, e.target.value)) {
+      setCurrentEmailError("");
+    } else {
+      setCurrentEmailError(
+        "Your email is not in our records! Your donation will still go through but please consider our Givr app in the future to keep track of donations!"
+      );
+    }
   };
 
   function validateEmail(users, email) {
@@ -72,21 +81,22 @@ function PaymentForm() {
       // TODO: Fix this by adding email to firestore!
       if (email.toLowerCase() === Givr.email.toLowerCase()) {
         setCurrentUser(Givr.id);
+        console.log("true");
         return true;
       }
     }
+    console.log("False");
     return false;
   }
 
   function addDonationToUserAccount(users, email) {
     for (var user in users) {
       var Givr = users[user];
-      // TODO: Fix this by adding email to firestore!
       if (email.toLowerCase() === Givr.email.toLowerCase()) {
         var currentDonations = Givr.donationHistory;
         var newDonation = {
           amount: parseInt(donationValue),
-          category: "Health",
+          category: category,
           datetime: new Date(),
           name: formCharity,
         };
@@ -107,7 +117,6 @@ function PaymentForm() {
         type: "card",
         card: elements.getElement(CardElement),
       });
-
       if (!error) {
         try {
           const { id } = paymentMethod;
@@ -134,14 +143,42 @@ function PaymentForm() {
         setPaymentStart(false);
       }
     } else {
-      setErrorMessage({ message: "Email does not match our records" });
-      setPaymentStart(false);
+      // setErrorMessage({ message: "Email does not match our records" });
+      // setPaymentStart(false);
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: elements.getElement(CardElement),
+      });
+      if (!error) {
+        try {
+          const { id } = paymentMethod;
+          const response = await axios.post(
+            "https://givr-server.herokuapp.com/donate",
+            {
+              amount: parseFloat(donationValue) * 100,
+              describe: "Please donate this to " + formCharity,
+              id: id,
+            }
+          );
+
+          if (response.data.success) {
+            setSuccess(true);
+            setPaymentStart(false);
+          }
+        } catch (error) {
+          setErrorMessage(error);
+          setPaymentStart(false);
+        }
+      } else {
+        setErrorMessage(error);
+        setPaymentStart(false);
+      }
     }
   };
 
   return (
     <>
-      {!success ? (
+      {success ? (
         <div className="wrapper">
           <div className="form-wrapper">
             <div className="img-wrapper">
@@ -180,6 +217,9 @@ function PaymentForm() {
                   onChange={handleChange}
                   required
                 ></input>
+                {currentEmailError !== "" ? (
+                  <span> {currentEmailError}</span>
+                ) : null}
               </div>
               <div className="charity">
                 <label htmlFor="charity">Charity</label>
@@ -188,7 +228,7 @@ function PaymentForm() {
                   placeholder="Charity"
                   name="charity"
                   id="charity"
-                  value={formCharity}
+                  value={formCharity !== "" ? formCharity : ""}
                   required
                 ></input>
               </div>
