@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Modal, Button } from "react-bootstrap";
-
+import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import CurrencyInput from "react-currency-input-field";
 import db from "../firebase";
