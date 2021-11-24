@@ -9,7 +9,7 @@
 }
 
 .inner-form-wrapper {
-  width: 600px;
+  width: 400px;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -18,10 +18,11 @@
   box-shadow: 0px 10px 50px #555;
   background-color: #ffffff;
 
-  @media screen and (max-width: 3000px) {
-    width: 400px;
+  @media screen and (min-width: 600) {
+    width: 600px;
   }
 }
+
 .img-wrapper {
   display: flex;
   align-items: center;
