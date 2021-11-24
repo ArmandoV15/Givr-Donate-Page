@@ -103,7 +103,10 @@ function PaymentForm() {
   function addDonationToUserAccount(users, email) {
     for (var user in users) {
       var Givr = users[user];
-      if (email.toLowerCase() === Givr.email.toLowerCase()) {
+      if (
+        Givr.email != null &&
+        email.toLowerCase() === Givr.email.toLowerCase()
+      ) {
         var currentDonations = Givr.donationHistory;
         var newDonation = {
           amount: parseInt(donationValue),
