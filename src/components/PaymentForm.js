@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import { Modal, Button } from "react-bootstrap";
+
 import axios from "axios";
 import CurrencyInput from "react-currency-input-field";
 import db from "../firebase";
@@ -38,8 +40,13 @@ function PaymentForm() {
   const [paymentStart, setPaymentStart] = useState(false);
   const [email, setEmail] = useState("");
   const [currentEmailError, setCurrentEmailError] = useState("");
+  const [hardCodedCharity, setHardCodedCharity] = useState("");
   const stripe = useStripe();
   const elements = useElements();
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const params = new URLSearchParams(window.location.search);
   const formCharity = params.get("Charity");
@@ -69,17 +76,21 @@ function PaymentForm() {
     if (validateEmail(users, e.target.value)) {
       setCurrentEmailError("");
     } else {
-      setCurrentEmailError(
-        "Your email is not in our records! Your donation will still go through but please consider our Givr app in the future to keep track of donations!"
-      );
+      setCurrentEmailError("If still visible after entering please");
     }
+  };
+
+  const handleCharityChange = (e) => {
+    setHardCodedCharity(e.target.value);
   };
 
   function validateEmail(users, email) {
     for (var user in users) {
       var Givr = users[user];
-      // TODO: Fix this by adding email to firestore!
-      if (email.toLowerCase() === Givr.email.toLowerCase()) {
+      if (
+        Givr.email != null &&
+        email.toLowerCase() === Givr.email.toLowerCase()
+      ) {
         setCurrentUser(Givr.id);
         console.log("true");
         return true;
@@ -156,7 +167,7 @@ function PaymentForm() {
             "https://givr-server.herokuapp.com/donate",
             {
               amount: parseFloat(donationValue) * 100,
-              describe: "Please donate this to " + formCharity,
+              describe: "Please donate this to " + hardCodedCharity,
               id: id,
             }
           );
@@ -179,8 +190,8 @@ function PaymentForm() {
   return (
     <>
       {!success ? (
-        <div className="wrapper">
-          <div className="form-wrapper">
+        <div className="Main-outter-wrapper">
+          <div className="inner-form-wrapper">
             <div className="img-wrapper">
               <img
                 src={require("../images/givr_reversed.jpeg").default}
@@ -189,10 +200,13 @@ function PaymentForm() {
                 height="200"
               ></img>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form className="donationForm" onSubmit={handleSubmit}>
               <div className="firstName">
-                <label htmlFor="firstName">First Name</label>
+                <label className="first-name-label" htmlFor="firstName">
+                  First Name
+                </label>
                 <input
+                  className="first-name-input"
                   type="text"
                   placeholder="First Name"
                   name="firstName"
@@ -200,8 +214,11 @@ function PaymentForm() {
                 ></input>
               </div>
               <div className="lastName">
-                <label htmlFor="lastName">Last Name</label>
+                <label className="last-name-label" htmlFor="lastName">
+                  Last Name
+                </label>
                 <input
+                  className="last-name-input"
                   type="text"
                   placeholder="Last Name"
                   name="lastName"
@@ -209,8 +226,11 @@ function PaymentForm() {
                 ></input>
               </div>
               <div className="email">
-                <label htmlFor="email">Email</label>
+                <label className="email-label" htmlFor="email">
+                  Email
+                </label>
                 <input
+                  className="email-input"
                   type="email"
                   placeholder="Email"
                   name="email"
@@ -218,23 +238,58 @@ function PaymentForm() {
                   required
                 ></input>
                 {currentEmailError !== "" ? (
-                  <span> {currentEmailError}</span>
+                  <span>
+                    {" "}
+                    {currentEmailError}{" "}
+                    <a
+                      onClick={handleShow}
+                      style={{ cursor: "pointer", color: "blue" }}
+                    >
+                      click Here!
+                    </a>
+                  </span>
                 ) : null}
               </div>
+              <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  Woohoo, you're reading this text in a modal!
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Close
+                  </Button>
+                  <Button variant="primary" onClick={handleClose}>
+                    Save Changes
+                  </Button>
+                </Modal.Footer>
+              </Modal>
               <div className="charity">
-                <label htmlFor="charity">Charity</label>
+                <label className="charity-name-label" htmlFor="charity">
+                  Charity
+                </label>
                 <input
+                  className="charity-name-input"
                   type="text"
                   placeholder="Charity"
                   name="charity"
                   id="charity"
-                  value={formCharity !== "" ? formCharity : ""}
+                  value={formCharity !== "" ? formCharity : hardCodedCharity}
+                  onchange={handleCharityChange}
                   required
                 ></input>
               </div>
               <div className="donation-amount">
-                <label htmlFor="donation-amount">Donation Amount</label>
+                <label
+                  className="donation-amount-label"
+                  htmlFor="donation-amount"
+                >
+                  Donation Amount
+                </label>
                 <CurrencyInput
+                  className="charity-name-input"
                   placeholder="Amount"
                   allowDecimals={false}
                   onValueChange={validateValue}
