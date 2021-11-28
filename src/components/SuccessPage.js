@@ -16,8 +16,8 @@ const imgStyle = {
 const img2Style = {
   position: "absolute",
   zIndex: "3",
-  height: "120px",
-  width: "92px",
+  height: "110px",
+  width: "88px",
   top: "38%",
   left: "38%",
   borderRadius: "50%",
