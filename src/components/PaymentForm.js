@@ -192,7 +192,7 @@ function PaymentForm() {
 
   return (
     <>
-      {!success ? (
+      {success ? (
         <div className="Main-outter-wrapper">
           <div className="inner-form-wrapper">
             <div className="img-wrapper">
@@ -255,17 +255,19 @@ function PaymentForm() {
               </div>
               <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                  <Modal.Title>Modal heading</Modal.Title>
+                  <Modal.Title>
+                    Email not recognized by our system!!
+                  </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  Woohoo, you're reading this text in a modal!
+                  If you have an account please double check your email. If you
+                  do not have a givr account set up, No Worries. Your donation
+                  will still go through but please consider downloading our
+                  application on the app store!
                 </Modal.Body>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                     Close
-                  </Button>
-                  <Button variant="primary" onClick={handleClose}>
-                    Save Changes
                   </Button>
                 </Modal.Footer>
               </Modal>
