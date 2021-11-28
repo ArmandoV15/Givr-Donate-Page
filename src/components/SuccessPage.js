@@ -16,10 +16,10 @@ const imgStyle = {
 const img2Style = {
   position: "absolute",
   zIndex: "3",
-  height: "130px",
-  width: "98px",
-  top: "33.5%",
-  left: "39.1%",
+  height: "120px",
+  width: "92px",
+  top: "38%",
+  left: "38%",
   borderRadius: "50%",
 };
 
