@@ -1,16 +1,15 @@
 import React from "react";
-import background from "../images/image0.png";
 
-const imgMyimageexample = require("../images/image0.png");
 const divStyle = {
   display: "grid",
   height: "100%",
   backgroundColor: "#009988",
+  overflow: "auto",
 };
 
 const imgStyle = {
-  maxWidth: "100%",
-  maxHeight: "100%",
+  minWidth: "100%",
+  minHeight: "100%",
   margin: "auto",
 };
 
