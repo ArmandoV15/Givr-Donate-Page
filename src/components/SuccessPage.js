@@ -17,9 +17,9 @@ const img2Style = {
   position: "absolute",
   zIndex: "3",
   height: "110px",
-  width: "88px",
-  top: "38%",
-  left: "38%",
+  width: "85px",
+  top: "36%",
+  left: "40%",
   borderRadius: "50%",
 };
 
