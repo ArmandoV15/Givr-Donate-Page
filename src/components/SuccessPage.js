@@ -4,12 +4,11 @@ const divStyle = {
   display: "grid",
   height: "100%",
   backgroundColor: "#009988",
-  overflow: "auto",
 };
 
 const imgStyle = {
-  minWidth: "100%",
-  minHeight: "100%",
+  maxWidth: "100%",
+  minHeight: "100vh",
   margin: "auto",
 };
 
