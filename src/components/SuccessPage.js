@@ -10,14 +10,30 @@ const imgStyle = {
   maxWidth: "100%",
   minHeight: "100vh",
   margin: "auto",
+  zIndex: "1",
 };
 
-function SuccessPage() {
+const img2Style = {
+  position: "absolute",
+  zIndex: "3",
+  height: "130px",
+  width: "98px",
+  top: "33.5%",
+  left: "39.1%",
+  borderRadius: "50%",
+};
+
+function SuccessPage({ value }) {
   return (
     <div style={divStyle}>
       <img
         style={imgStyle}
         src={require("../images/image0.png").default}
+        alt="Example1"
+      ></img>
+      <img
+        style={img2Style}
+        src={require("../images/givr_reversed.jpeg").default}
         alt="Example1"
       ></img>
     </div>

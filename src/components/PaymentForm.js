@@ -330,7 +330,7 @@ function PaymentForm() {
           </div>
         </div>
       ) : (
-        <SuccessPage />
+        <SuccessPage value={"Here"} />
       )}
     </>
   );
