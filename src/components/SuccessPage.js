@@ -10,7 +10,7 @@ const divStyle = {
 
 const imgStyle = {
   maxWidth: "100%",
-  maxHeight: "100vh",
+  maxHeight: "100%",
   margin: "auto",
 };
 
