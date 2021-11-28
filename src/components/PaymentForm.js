@@ -192,7 +192,7 @@ function PaymentForm() {
 
   return (
     <>
-      {success ? (
+      {!success ? (
         <div className="Main-outter-wrapper">
           <div className="inner-form-wrapper">
             <div className="img-wrapper">
