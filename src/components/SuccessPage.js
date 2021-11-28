@@ -18,8 +18,8 @@ const img2Style = {
   zIndex: "3",
   height: "110px",
   width: "85px",
-  top: "36%",
-  left: "40%",
+  top: "40%",
+  left: "39%",
   borderRadius: "50%",
 };
 
