@@ -1,14 +1,15 @@
 import React from "react";
 
 const divStyle = {
-  display: "grid",
+  display: "flex",
   height: "100%",
   backgroundColor: "#009988",
+  backgroundSize: "cover",
 };
 
 const imgStyle = {
-  maxWidth: "100%",
-  minHeight: "100vh",
+  maxWidth: "window",
+  minHeight: "window",
   margin: "auto",
   zIndex: "1",
 };
@@ -16,10 +17,10 @@ const imgStyle = {
 const img2Style = {
   position: "absolute",
   zIndex: "3",
-  height: "113px",
-  width: "85px",
-  top: "37.5%",
-  left: "39%",
+  height: "14%",
+  width: "18%",
+  top: "34%",
+  left: "50%",
   borderRadius: "50%",
 };
 
@@ -31,11 +32,11 @@ function SuccessPage({ value }) {
         src={require("../images/image0.png").default}
         alt="Example1"
       ></img>
-      <img
+      {/* <img
         style={img2Style}
         src={require("../images/givr_reversed.jpeg").default}
         alt="Example1"
-      ></img>
+      ></img> */}
     </div>
   );
 }
