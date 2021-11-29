@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, ButtonGroup } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import CurrencyInput from "react-currency-input-field";
@@ -76,7 +76,7 @@ function PaymentForm() {
     if (validateEmail(users, e.target.value)) {
       setCurrentEmailError("");
     } else {
-      setCurrentEmailError("If still visible after entering please");
+      setCurrentEmailError("If visible after entering please");
     }
   };
 
@@ -293,7 +293,13 @@ function PaymentForm() {
                 >
                   Donation Amount
                 </label>
-                <CurrencyInput
+                <ButtonGroup aria-label="Basic example">
+                  <Button className="button-10">$10</Button>
+                  <Button>$25</Button>
+                  <Button>$50</Button>
+                  <Button>Custom</Button>
+                </ButtonGroup>
+                {/* <CurrencyInput
                   className="charity-name-input"
                   placeholder="Amount"
                   allowDecimals={false}
@@ -301,7 +307,7 @@ function PaymentForm() {
                   prefix={"$"}
                   step={10}
                   required
-                />
+                /> */}
               </div>
               <div className="payment-box">
                 <CardElement options={CARD_OPTIONS} />

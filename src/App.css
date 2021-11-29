@@ -191,3 +191,14 @@ input.error {
   min-width: 100%;
   min-height: 100%;
 }
+
+.donation-amount Button {
+  background-color: #009988;
+  border-color: #009988;
+}
+
+.donation-amount Button:hover {
+  background-color: white;
+  color: black;
+  border-color: #009988;
+}
