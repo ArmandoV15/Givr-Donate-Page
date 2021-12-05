@@ -190,6 +190,6 @@ input.error {
   background-color: #009988;
 }
 .success-image {
-  max-width: 100hh;
+  max-width: 100%;
   max-height: 100vh;
 }
