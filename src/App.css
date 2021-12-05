@@ -141,11 +141,6 @@ input.error {
   border: 2px solid #009988;
 }
 
-/* .createAccount small {
-  color: #999;
-  font-weight: lighter;
-} */
-
 .status-messages {
   display: flex;
   align-items: center;
@@ -168,37 +163,33 @@ input.error {
   margin-top: 10px;
 }
 
-.bg-image {
-  background-image: url("./images/image0.png");
-  background-color: #009988;
-  position: fixed;
-  min-height: 100%;
-  min-width: 100%;
-  background-size: cover;
-  background-position: center;
-  object-fit: cover;
-  flex: 1;
+.toggle-btn-off {
+  background-color: white !important;
+  border-color: #009988 !important;
+  color: black !important;
 }
 
-.fill {
+.toggle-btn-on {
+  background-color: #009988 !important;
+  border-color: #009988 !important;
+  color: black !important;
+}
+
+.toggle-btn:hover {
+  background-color: #009988 !important;
+  color: black !important;
+  border-color: #009988 !important;
+}
+
+.success-image-wrapper {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-.fill-image {
-  flex-shrink: 0;
-  min-width: 100%;
-  min-height: 100%;
-}
-
-.donation-amount Button {
+  justify-content: center; /* horizontally center */
+  align-items: center; /* vertically center */
+  height: 100vh;
+  width: 100hh;
   background-color: #009988;
-  border-color: #009988;
 }
-
-.donation-amount Button:hover {
-  background-color: white;
-  color: black;
-  border-color: #009988;
+.success-image {
+  max-width: 100hh;
+  max-height: 100vh;
 }
