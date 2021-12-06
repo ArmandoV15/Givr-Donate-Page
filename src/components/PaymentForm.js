@@ -43,10 +43,11 @@ function PaymentForm() {
   const [hardCodedCharity, setHardCodedCharity] = useState("");
   const [customDonation, setCustomDonation] = useState(false);
   const [radioValue, setRadioValue] = useState("");
+  const [userProfilePic, setUserProfilePic] = useState("");
   const radios = [
-    { name: "$15", value: "15" },
     { name: "$25", value: "25" },
     { name: "$50", value: "50" },
+    { name: "$100", value: "100" },
     { name: "Custom", value: "custom" },
   ];
   const stripe = useStripe();
@@ -96,7 +97,6 @@ function PaymentForm() {
   };
 
   const handleCharityChange = (e) => {
-    console.log(e.target.value);
     setHardCodedCharity(e.target.value);
   };
 
@@ -108,6 +108,7 @@ function PaymentForm() {
         email.toLowerCase() === Givr.email.toLowerCase()
       ) {
         setCurrentUser(Givr.id);
+        setUserProfilePic(Givr.imageStorage);
         return true;
       }
     }
@@ -388,7 +389,7 @@ function PaymentForm() {
           </div>
         </div>
       ) : (
-        <SuccessPage value={"Here"} />
+        <SuccessPage value={userProfilePic} />
       )}
     </>
   );
