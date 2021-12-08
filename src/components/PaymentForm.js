@@ -125,7 +125,7 @@ function PaymentForm() {
         var currentDonations = Givr.donationHistory;
         var newDonation = {
           amount: parseInt(donationValue),
-          category: category,
+          category: category !== "" ? category : "Art, Culture & Humanities",
           datetime: new Date(),
           name: formCharity !== "" ? formCharity : hardCodedCharity,
         };

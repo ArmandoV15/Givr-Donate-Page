@@ -24,7 +24,7 @@ function SuccessPage({ value }) {
         alt="Example1"
         className="success-image"
       ></img>
-      <img src={userImage} alt="pic" className="profile-pic"></img>
+      {/* <img src={userImage} alt="pic" className="profile-pic"></img> */}
     </div>
   );
 }
