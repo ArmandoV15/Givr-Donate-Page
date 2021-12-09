@@ -20,11 +20,10 @@ function SuccessPage({ value }) {
   return (
     <div className="success-image-wrapper">
       <img
-        src={require("../images/image0.png").default}
+        src={require("../images/thank_you.PNG").default}
         alt="Example1"
         className="success-image"
       ></img>
-      {/* <img src={userImage} alt="pic" className="profile-pic"></img> */}
     </div>
   );
 }
