@@ -69,6 +69,7 @@ function PaymentForm() {
   const params = new URLSearchParams(window.location.search);
   const formCharity = params.get("Charity");
   const category = params.get("Category");
+  const currentUserEmail = params.get("Email");
   useEffect(
     () =>
       onSnapshot(collection(db, "Givr"), (snapshot) =>
@@ -118,6 +119,7 @@ function PaymentForm() {
   function addDonationToUserAccount(users, email) {
     for (var user in users) {
       var Givr = users[user];
+      console.log(email);
       if (
         Givr.email != null &&
         email.toLowerCase() === Givr.email.toLowerCase()
@@ -138,10 +140,16 @@ function PaymentForm() {
     }
   }
 
+  function currentEmail(currentUserEmail) {
+    return;
+  }
+
   const handleSubmit = async (e) => {
     setPaymentStart(true);
     e.preventDefault();
-    if (validateEmail(users, email)) {
+    if (
+      validateEmail(users, currentUserEmail === null ? email : currentUserEmail)
+    ) {
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: "card",
         card: elements.getElement(CardElement),
@@ -161,7 +169,10 @@ function PaymentForm() {
           );
 
           if (response.data.success) {
-            addDonationToUserAccount(users, email);
+            addDonationToUserAccount(
+              users,
+              currentUserEmail === null ? email : currentUserEmail
+            );
             setSuccess(true);
             setPaymentStart(false);
           }
@@ -197,6 +208,7 @@ function PaymentForm() {
           );
 
           if (response.data.success) {
+            console.log(email);
             setSuccess(true);
             setPaymentStart(false);
           }
@@ -253,31 +265,33 @@ function PaymentForm() {
                   required
                 ></input>
               </div>
-              <div className="email">
-                <label className="email-label" htmlFor="email">
-                  Email
-                </label>
-                <input
-                  className="email-input"
-                  type="email"
-                  placeholder="Email"
-                  name="email"
-                  onChange={handleChange}
-                  required
-                ></input>
-                {currentEmailError !== "" ? (
-                  <span>
-                    {" "}
-                    {currentEmailError}{" "}
-                    <a
-                      onClick={handleShow}
-                      style={{ cursor: "pointer", color: "blue" }}
-                    >
-                      click Here!
-                    </a>
-                  </span>
-                ) : null}
-              </div>
+              {currentUserEmail === null ? (
+                <div className="email">
+                  <label className="email-label" htmlFor="email">
+                    Email
+                  </label>
+                  <input
+                    className="email-input"
+                    type="email"
+                    placeholder="Email"
+                    name="email"
+                    onChange={handleChange}
+                    required
+                  ></input>
+                  {currentEmailError !== "" ? (
+                    <span>
+                      {" "}
+                      {currentEmailError}{" "}
+                      <a
+                        onClick={handleShow}
+                        style={{ cursor: "pointer", color: "blue" }}
+                      >
+                        click Here!
+                      </a>
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
               <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
                   <Modal.Title>
