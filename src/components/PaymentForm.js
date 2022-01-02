@@ -35,7 +35,6 @@ const CARD_OPTIONS = {
 function PaymentForm() {
   const [users, setUsers] = useState([]);
   const [charities, setCharities] = useState([]);
-  const [currentUser, setCurrentUser] = useState("");
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState({});
   const [paymentStart, setPaymentStart] = useState(false);
@@ -119,7 +118,6 @@ function PaymentForm() {
         Givr.email != null &&
         email.toLowerCase() === Givr.email.toLowerCase()
       ) {
-        setCurrentUser(Givr.id);
         setUserProfilePic(Givr.imageStorage);
         return true;
       }
