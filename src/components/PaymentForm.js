@@ -34,6 +34,7 @@ const CARD_OPTIONS = {
 
 function PaymentForm() {
   const [users, setUsers] = useState([]);
+  const [charities, setCharities] = useState([]);
   const [currentUser, setCurrentUser] = useState("");
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState({});
@@ -78,6 +79,16 @@ function PaymentForm() {
     []
   );
 
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "Charity"), (snapshot) =>
+        setCharities(
+          snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        )
+      ),
+    []
+  );
+
   const validateValue = (value) => {
     if (!value) {
       console.log("");
@@ -116,7 +127,7 @@ function PaymentForm() {
     return false;
   }
 
-  function addDonationToUserAccount(users, email) {
+  function addDonationToUserAccount(users, charities, email) {
     for (var user in users) {
       var Givr = users[user];
       console.log(email);
@@ -136,12 +147,21 @@ function PaymentForm() {
         updateDoc(currentUser, {
           donationHistory: currentDonations,
         });
+
+        for (var currentDonateCharity in charities) {
+          var currentCharity = charities[currentDonateCharity];
+          if (currentCharity.name === formCharity) {
+            var updatedGivList = Givr.givList;
+            if (!updatedGivList.includes(currentCharity.id)) {
+              updatedGivList.push(currentCharity.id);
+              updateDoc(currentUser, {
+                givList: updatedGivList,
+              });
+            }
+          }
+        }
       }
     }
-  }
-
-  function currentEmail(currentUserEmail) {
-    return;
   }
 
   const handleSubmit = async (e) => {
@@ -171,6 +191,7 @@ function PaymentForm() {
           if (response.data.success) {
             addDonationToUserAccount(
               users,
+              charities,
               currentUserEmail === null ? email : currentUserEmail
             );
             setSuccess(true);
