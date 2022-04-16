@@ -182,6 +182,7 @@ function PaymentForm() {
               describe:
                 "Please donate this to " +
                 (formCharity !== "" ? formCharity : hardCodedCharity),
+              email: currentUserEmail === null ? email : currentUserEmail,
               id: id,
             }
           );
@@ -221,7 +222,10 @@ function PaymentForm() {
             "https://givr-server.herokuapp.com/donate",
             {
               amount: parseFloat(donationValue) * 100,
-              describe: "Please donate this to " + hardCodedCharity,
+              describe:
+                "Please donate this to " +
+                (formCharity !== "" ? formCharity : hardCodedCharity),
+              email: currentUserEmail === null ? email : currentUserEmail,
               id: id,
             }
           );
