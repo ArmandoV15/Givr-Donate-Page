@@ -35,7 +35,7 @@ const CARD_OPTIONS = {
 function PaymentForm() {
   const [users, setUsers] = useState([]);
   const [charities, setCharities] = useState([]);
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState(true);
   const [errorMessage, setErrorMessage] = useState({});
   const [paymentStart, setPaymentStart] = useState(false);
   const [email, setEmail] = useState("");

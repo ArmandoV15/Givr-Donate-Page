@@ -3,7 +3,14 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 function SuccessPage({ value }) {
   const [userImage, setUserImage] = useState("");
-  const lastSegment = value.split("/").pop();
+  const [width, setWidth] = React.useState(window.innerWidth);
+  const updateWidthAndHeight = () => {
+    setWidth(window.innerWidth);
+  };
+  React.useEffect(() => {
+    window.addEventListener("resize", updateWidthAndHeight);
+    return () => window.removeEventListener("resize", updateWidthAndHeight);
+  });
 
   const storage = getStorage();
   const storageRef = ref(storage, value);
@@ -18,13 +25,25 @@ function SuccessPage({ value }) {
 
   console.log(userImage);
   return (
-    <div className="success-image-wrapper">
-      <img
-        src={require("../images/thank_you.PNG").default}
-        alt="Example1"
-        className="success-image"
-      ></img>
-    </div>
+    <>
+      {width < 500 ? (
+        <div className="success-image-wrapper">
+          <img
+            src={require("../images/thank_you.PNG").default}
+            alt="Example1"
+            className="success-image"
+          ></img>
+        </div>
+      ) : (
+        <div className="success-image-wrapper-big">
+          <img
+            src={require("../images/thank_you.PNG").default}
+            alt="Example1"
+            className="success-image-big"
+          ></img>
+        </div>
+      )}
+    </>
   );
 }
 
