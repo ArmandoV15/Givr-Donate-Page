@@ -39,7 +39,6 @@ function SuccessPage({ value }) {
           <img
             src={require("../images/thank_you.PNG").default}
             alt="Example1"
-            className="success-image-big"
           ></img>
         </div>
       )}
