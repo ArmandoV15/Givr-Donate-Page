@@ -196,6 +196,9 @@ input.error {
   height: 100%;
 }
 
+.success-image-big {
+}
+
 .success-image-wrapper-big {
   display: flex;
   width: 100%;
