@@ -195,7 +195,7 @@ function PaymentForm() {
               amount: parseFloat(donationValue) * 100,
               describe:
                 "Please donate this to " +
-                (formCharity !== "" ? formCharity : hardCodedCharity),
+                (formCharity !== null ? formCharity : hardCodedCharity),
               email: currentUserEmail === null ? email : currentUserEmail,
               id: id,
             }
