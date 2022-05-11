@@ -41,6 +41,8 @@ function PaymentForm() {
   const [email, setEmail] = useState("");
   const [currentEmailError, setCurrentEmailError] = useState("");
   const [hardCodedCharity, setHardCodedCharity] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [customDonation, setCustomDonation] = useState(false);
   const [radioValue, setRadioValue] = useState("");
   const [userProfilePic, setUserProfilePic] = useState("");
@@ -111,6 +113,14 @@ function PaymentForm() {
     setHardCodedCharity(e.target.value);
   };
 
+  const handleFirstNameChange = (e) => {
+    setFirstName(e.target.value);
+  };
+
+  const handleLastNameChange = (e) => {
+    setLastName(e.target.value);
+  };
+
   function validateEmail(users, email) {
     for (var user in users) {
       var Givr = users[user];
@@ -171,6 +181,10 @@ function PaymentForm() {
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: "card",
         card: elements.getElement(CardElement),
+        billing_details: {
+          email: currentUserEmail === null ? email : currentUserEmail,
+          name: firstName + " " + lastName,
+        },
       });
       if (!error && donationValue !== 0) {
         try {
@@ -214,6 +228,10 @@ function PaymentForm() {
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: "card",
         card: elements.getElement(CardElement),
+        billing_details: {
+          email: currentUserEmail === null ? email : currentUserEmail,
+          name: firstName + " " + lastName,
+        },
       });
       if (!error && donationValue !== 0) {
         try {
@@ -224,7 +242,7 @@ function PaymentForm() {
               amount: parseFloat(donationValue) * 100,
               describe:
                 "Please donate this to " +
-                (formCharity !== "" ? formCharity : hardCodedCharity),
+                (formCharity !== null ? formCharity : hardCodedCharity),
               email: currentUserEmail === null ? email : currentUserEmail,
               id: id,
             }
@@ -274,6 +292,7 @@ function PaymentForm() {
                   placeholder="First Name"
                   name="firstName"
                   required
+                  onChange={(e) => handleFirstNameChange(e)}
                 ></input>
               </div>
               <div className="lastName">
@@ -286,6 +305,7 @@ function PaymentForm() {
                   placeholder="Last Name"
                   name="lastName"
                   required
+                  onChange={(e) => handleLastNameChange(e)}
                 ></input>
               </div>
               {currentUserEmail === null ? (
