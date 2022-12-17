@@ -10,6 +10,14 @@ import PulseLoader from "react-spinners/ClipLoader";
 import SuccessPage from "./SuccessPage";
 import { updateDoc, doc } from "firebase/firestore";
 
+const addServiceFeeText =
+  "Make my gift go further! Please increase my donation by 3% to help cover processing fees.";
+const termsAndPrivacyText =
+  " I acknowledge that I have read and understand the ";
+const termsAndPrivacyLink = (
+  <a href={"http://givrapp.org/privacy-policy/"}>Terms and Privacy</a>
+);
+
 let donationValue = 0;
 
 const CARD_OPTIONS = {
@@ -46,6 +54,8 @@ function PaymentForm() {
   const [customDonation, setCustomDonation] = useState(false);
   const [radioValue, setRadioValue] = useState("");
   const [userProfilePic, setUserProfilePic] = useState("");
+  const [addProcessingFee, setAddProcessingFee] = useState(false);
+  const [termsAndPrivacy, setTermsAndPrivacy] = useState(false);
   const radios = [
     { name: "$25", value: "25" },
     { name: "$50", value: "50" },
@@ -121,6 +131,14 @@ function PaymentForm() {
     setLastName(e.target.value);
   };
 
+  const handleProcessingFeeChange = (e) => {
+    setAddProcessingFee((current) => !current);
+  };
+
+  const handleTermsAndPrivacyChange = (e) => {
+    setTermsAndPrivacy((current) => !current);
+  };
+
   function validateEmail(users, email) {
     for (var user in users) {
       var Givr = users[user];
@@ -135,7 +153,7 @@ function PaymentForm() {
     return false;
   }
 
-  function addDonationToUserAccount(users, charities, email) {
+  function addDonationToUserAccount(finalDonation, users, charities, email) {
     for (var user in users) {
       var Givr = users[user];
       console.log(email);
@@ -145,7 +163,7 @@ function PaymentForm() {
       ) {
         var currentDonations = Givr.donationHistory;
         var newDonation = {
-          amount: parseInt(donationValue),
+          amount: parseFloat(finalDonation),
           category: category !== null ? category : "Art, Culture & Humanities",
           datetime: new Date(),
           name: formCharity !== null ? formCharity : hardCodedCharity,
@@ -175,6 +193,14 @@ function PaymentForm() {
   const handleSubmit = async (e) => {
     setPaymentStart(true);
     e.preventDefault();
+    let finalDonation = 0;
+    // Updates donation value based on whether or not the processing fee box is checked
+    if (addProcessingFee) {
+      const fee = parseFloat(donationValue) * 0.03;
+      finalDonation = parseFloat(donationValue) + fee;
+    } else {
+      finalDonation = donationValue;
+    }
     if (
       validateEmail(users, currentUserEmail === null ? email : currentUserEmail)
     ) {
@@ -186,13 +212,13 @@ function PaymentForm() {
           name: firstName + " " + lastName,
         },
       });
-      if (!error && donationValue !== 0) {
+      if (!error && parseFloat(finalDonation) !== 0) {
         try {
           const { id } = paymentMethod;
           const response = await axios.post(
             "https://givr-server.herokuapp.com/donate",
             {
-              amount: parseFloat(donationValue) * 100,
+              amount: parseFloat(finalDonation) * 100,
               describe:
                 "Please donate this to " +
                 (formCharity !== null ? formCharity : hardCodedCharity),
@@ -200,9 +226,9 @@ function PaymentForm() {
               id: id,
             }
           );
-
           if (response.data.success) {
             addDonationToUserAccount(
+              finalDonation,
               users,
               charities,
               currentUserEmail === null ? email : currentUserEmail
@@ -215,7 +241,7 @@ function PaymentForm() {
           setPaymentStart(false);
         }
       } else {
-        if (donationValue === 0) {
+        if (parseFloat(finalDonation) === 0) {
           setErrorMessage({ message: "Must Select A Donation Value" });
         } else {
           setErrorMessage(error);
@@ -233,13 +259,13 @@ function PaymentForm() {
           name: firstName + " " + lastName,
         },
       });
-      if (!error && donationValue !== 0) {
+      if (!error && parseFloat(finalDonation) !== 0) {
         try {
           const { id } = paymentMethod;
           const response = await axios.post(
             "https://givr-server.herokuapp.com/donate",
             {
-              amount: parseFloat(donationValue) * 100,
+              amount: parseFloat(finalDonation) * 100,
               describe:
                 "Please donate this to " +
                 (formCharity !== null ? formCharity : hardCodedCharity),
@@ -247,9 +273,7 @@ function PaymentForm() {
               id: id,
             }
           );
-
           if (response.data.success) {
-            console.log(email);
             setSuccess(true);
             setPaymentStart(false);
           }
@@ -258,7 +282,7 @@ function PaymentForm() {
           setPaymentStart(false);
         }
       } else {
-        if (donationValue === 0) {
+        if (parseFloat(finalDonation) === 0) {
           setErrorMessage({ message: "Must Select A Donation Value" });
         } else {
           setErrorMessage(error);
@@ -422,9 +446,34 @@ function PaymentForm() {
               <div className="payment-box">
                 <CardElement options={CARD_OPTIONS} />
               </div>
+              <div className="check-box-container">
+                <div className="check-word-group1">
+                  <input
+                    type="checkbox"
+                    className="fee-check-box"
+                    value={addProcessingFee}
+                    onChange={handleProcessingFeeChange}
+                  />
+                  <p>{addServiceFeeText}</p>
+                </div>
+                <div className="check-word-group2">
+                  <input
+                    required
+                    type="checkbox"
+                    className="acknowledgement-box"
+                    value={termsAndPrivacy}
+                    onChange={handleTermsAndPrivacyChange}
+                  />
+                  <p>
+                    <span className="required">*</span>
+                    {termsAndPrivacyText}
+                    {termsAndPrivacyLink}
+                  </p>
+                </div>
+              </div>
               <div className="donate">
                 {!paymentStart ? (
-                  <button>Donate</button>
+                  <button disabled={!termsAndPrivacy}>Donate</button>
                 ) : (
                   <div className="spinner-wrapper">
                     <PulseLoader color={"#009988"} loading={true} size={20} />

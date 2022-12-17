@@ -130,7 +130,7 @@ input.error {
   margin-top: 1em;
   padding: 8px 0px;
   font-size: 1em;
-  font-weight: lighter;
+  font-weight: normal;
   letter-spacing: 1px;
   margin-bottom: 0.25em;
 }
@@ -139,6 +139,23 @@ input.error {
   color: #009988;
   background-color: #fff;
   border: 2px solid #009988;
+}
+
+.donate button:disabled {
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  width: 100%;
+  margin-top: 1em;
+  padding: 8px 0px;
+  font-size: 1em;
+  font-weight: normal;
+  letter-spacing: 1px;
+  margin-bottom: 0.25em;
+}
+
+.required {
+  color: red;
 }
 
 .status-messages {
@@ -179,6 +196,25 @@ input.error {
   background-color: #009988 !important;
   color: black !important;
   border-color: #009988 !important;
+}
+
+.check-box-container {
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+}
+
+.check-word-group1,
+.check-word-group2 {
+  display: flex;
+  flex-direction: row;
+}
+
+.fee-check-box,
+.acknowledgement-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
 }
 
 .success-image-wrapper {
