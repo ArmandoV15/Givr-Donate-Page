@@ -299,7 +299,7 @@ function PaymentForm() {
           <div className="inner-form-wrapper">
             <div className="img-wrapper">
               <img
-                src={require("../images/givr_reversed.jpeg").default}
+                src={require("../images/givr_reversed.jpeg")}
                 alt="Givr"
                 width="200"
                 height="200"
